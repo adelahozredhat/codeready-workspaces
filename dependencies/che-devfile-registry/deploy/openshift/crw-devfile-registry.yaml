@@ -33,6 +33,9 @@ objects:
       strategy:
         type: Docker
         dockerStrategy:
+          env:
+            - name: CHE_DEVFILE_REGISTRY_URL
+              value: 'https://devfile-registry-openshift-workspaces.apps-crc.testing/'
           dockerfilePath: build/dockerfiles/Dockerfile
       source:
         type: Git
