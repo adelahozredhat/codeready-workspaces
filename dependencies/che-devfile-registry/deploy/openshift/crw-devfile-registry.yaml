@@ -41,7 +41,7 @@ objects:
         type: Git
         git:
           uri: 'https://github.com/adelahozredhat/codeready-workspaces.git'
-          ref: 2.13.1
+          ref: Prueba-1
         contextDir: dependencies/che-devfile-registry
       triggers:
         - type: ConfigChange
