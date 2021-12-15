@@ -11,7 +11,45 @@ apiVersion: v1
 kind: Template
 metadata:
   name: codeready-devfile-registry
+  namespace: openshift-image-registry
 objects:
+  - apiVersion: v1
+    kind: ImageStream
+    metadata:
+      name: devfile-custom-example
+      namespace: openshift-image-registry
+    spec:
+      lookupPolicy:
+        local: false
+    status:
+      dockerImageRepository: >-
+        image-registry.openshift-image-registry.svc:5000/openshift-image-registry/devfile-custom-example
+      publicDockerImageRepository: >-
+        default-route-openshift-image-registry.apps-crc.testing/openshift-image-registry/devfile-custom-example
+  - apiVersion: v1
+    kind: BuildConfig
+    metadata:
+      name: docker-build
+      namespace: openshift-image-registry
+      labels:
+        name: docker-build
+    spec:
+      output:
+        to:
+          kind: ImageStreamTag
+          name: 'devfile-custom-example:latest'
+      strategy:
+        type: Docker
+        dockerStrategy:
+          dockerfilePath: build/dockerfiles/Dockerfile
+      source:
+        type: Git
+        git:
+          uri: 'https://github.com/sliphup/codeready-workspaces.git'
+          ref: 2.13.1
+        contextDir: dependencies/che-devfile-registry
+      triggers:
+        - type: ConfigChange
   - apiVersion: v1
     kind: DeploymentConfig
     metadata:
@@ -19,6 +57,7 @@ objects:
         app: codeready
         component: devfile-registry
       name: devfile-registry
+      namespace: openshift-image-registry
     spec:
       replicas: 1
       selector:
@@ -74,6 +113,7 @@ objects:
   - apiVersion: v1
     kind: Service
     metadata:
+      namespace: openshift-image-registry
       name: devfile-registry
     spec:
       ports:
@@ -87,6 +127,7 @@ objects:
   - apiVersion: v1
     kind: Route
     metadata:
+      namespace: openshift-image-registry
       labels:
         app: codeready
         component: devfile-registry
@@ -104,6 +145,7 @@ objects:
   - apiVersion: v1
     kind: ConfigMap
     metadata:
+      namespace: openshift-image-registry
       name: devfile-registry
     data:
       CRW_DEVFILE_IMAGES_REGISTRY_URL: ${CRW_DEVFILE_IMAGES_REGISTRY_URL}
