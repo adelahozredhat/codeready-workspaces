@@ -40,7 +40,7 @@ objects:
       source:
         type: Git
         git:
-          uri: 'https://github.com/sliphup/codeready-workspaces.git'
+          uri: 'https://github.com/adelahozredhat/codeready-workspaces.git'
           ref: 2.13.1
         contextDir: dependencies/che-devfile-registry
       triggers:
